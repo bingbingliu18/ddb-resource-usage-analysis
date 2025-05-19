@@ -1,0 +1,14 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "es:ESHttpPost",
+                "es:ESHttpPut",
+                "es:ESHttpGet"
+            ],
+            "Resource": "arn:aws:es:us-east-1:028183925784:domain/ddb-log-analysis1/*"
+        }
+    ]
+}
