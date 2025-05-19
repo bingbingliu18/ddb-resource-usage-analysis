@@ -8,7 +8,7 @@
                 "es:ESHttpPut",
                 "es:ESHttpGet"
             ],
-            "Resource": "arn:aws:es:us-east-1:<account id>:domain/ddb-log-analysis1/*"
+            "Resource": "arn:aws:es:us-east-1:<account id>:domain/ddb-log-analysis/*"
         }
     ]
 }
