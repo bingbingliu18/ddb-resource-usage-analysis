@@ -20,10 +20,8 @@ logging.basicConfig(
 
 # Constants for log generation
 USERS = ["linda1130", "potterantonio938", "spencerjohnson431", "ryan2152", "todd04710", "jamie04997"]
-MAPS = ["Twilight Temple", "Icy Islands", "Lava Lakes", "Radiant Reef", "Toxic Tundra", 
-        "Midnight Meadow", "Emerald Estuary", "Prismatic Plains", "Cosmic Crater", 
-        "Green Grasslands", "Neon City", "Nebula Nexus", "Deadly Dunes", "Jade Jungle", 
-        "Dusty Docks", "Umbra Uplands"]
+MAPS = ["Haunted Hills", "Bamboo Basin", "Quantum Quarry", "Murky Marshes", "Whispering Woods", 
+        "Juicy Jungle", "Hidden Harbor", "Crystal Caves", "Jade Jungle", "Ruby Ridge"]
 TABLE_NAME = "battle-royale"
 REGION = "us-east-1"
 
@@ -55,13 +53,13 @@ def generate_join_game_log():
     user_id = random.choice(USERS)
     map_name = random.choice(MAPS)
     
-    # RCU is typically high for join-game (60-66)
-    rcu = round(random.uniform(60.0, 66.0), 1)
-    # WCU is typically 7 for join-game
-    wcu = 7.0
+    # RCU is typically 0.5 or 1.0 for join-game (based on example logs)
+    rcu = random.choice([0.5, 1.0])
+    # WCU is typically 8.0 for join-game (based on example logs)
+    wcu = 8.0
     
-    # Latency between 95-145ms
-    latency_ms = round(random.uniform(95.0, 145.0), 8)
+    # Latency between 69-90ms (based on example logs)
+    latency_ms = round(random.uniform(69.0, 90.0), 8)
     
     # Generate timestamp
     timestamp = datetime.datetime.now().isoformat()
@@ -69,11 +67,11 @@ def generate_join_game_log():
     # Generate request ID
     request_id = str(uuid.uuid4())
     
-    # Create log entry
+    # Create log entry with structure matching example logs
     log_entry = {
         "timestamp": timestamp,
         "module": "join-game",
-        "operations": [f"query_open_games_map_{map_name.replace(' ', '_')}", "join_game_transaction"],
+        "operations": [f"query_open_games_map_{map_name}", "join_game_transaction"],
         "user_id": user_id,
         "rcu": rcu,
         "wcu": wcu,
@@ -84,8 +82,9 @@ def generate_join_game_log():
         "request_id": request_id,
         "table_usage": {"rcu": 0.0, "wcu": 4.0},
         "gsi_usage": {
-            "MapPKIndex": {"rcu": rcu, "wcu": 1.0},
-            "InvertedIndex": {"rcu": 0, "wcu": 2.0}
+            "OpenGamesIndex": {"rcu": rcu, "wcu": 1.0},
+            "InvertedIndex": {"rcu": 0, "wcu": 2.0},
+            "MapPKIndex": {"rcu": 0, "wcu": 1.0}
         }
     }
     
@@ -96,13 +95,13 @@ def generate_query_user_games_log():
     """Generate a log entry for the query-user-games module"""
     user_id = random.choice(USERS)
     
-    # RCU is typically low for query-user-games (2-4)
-    rcu = round(random.uniform(2.0, 4.0), 1)
+    # RCU is typically between 2.0 and 5.0 for query-user-games (based on example logs)
+    rcu = round(random.uniform(2.0, 5.0), 1)
     # WCU is typically 0 for query-user-games (read-only operation)
     wcu = 0
     
-    # Latency between 55-70ms
-    latency_ms = round(random.uniform(55.0, 70.0), 8)
+    # Latency between 60-70ms (based on example logs)
+    latency_ms = round(random.uniform(60.0, 70.0), 8)
     
     # Generate timestamp
     timestamp = datetime.datetime.now().isoformat()
@@ -110,7 +109,7 @@ def generate_query_user_games_log():
     # Generate request ID
     request_id = str(uuid.uuid4())
     
-    # Create log entry
+    # Create log entry with structure matching example logs
     log_entry = {
         "timestamp": timestamp,
         "module": "query-user-games",
@@ -207,7 +206,7 @@ def print_statistics():
 
 def main():
     """Main function to run the continuous log generator"""
-    logging.info("Starting DynamoDB resource usage log generator (NDJSON Only Version)")
+    logging.info("Starting DynamoDB resource usage log generator (NDJSON Version)")
     
     # Ensure log directory exists
     ensure_log_directory()
